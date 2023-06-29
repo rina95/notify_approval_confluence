@@ -1,2 +1,29 @@
 regex:
   email: /\A\S+@.+\.\S+\z/
+confluence:
+  parent_page_id: 85950659
+  path:
+    get_children: /wiki/rest/api/content/%{page_id}?expand=body.view
+    get_comments: /wiki/rest/api/content/%{page_id}/child/comment?expand=body.view,children.comment,children.comment.body.view,children.comment.history.createdBy,history.createdBy,children.comment.history.createdBy.email&depth=all&limit=100
+    get_state: /wiki/rest/api/content/%{page_id}/state
+mail:
+  subject: Đề nghị phê duyệt tài liệu PTTK trên Confluence
+  body: |
+    Kính gửi anh/chị,
+
+    Hiện tại có các tài liệu PTTK sau đang chờ anh/chị phê duyệt trên Confluence:
+    %{link_page_list}
+
+    Đề nghị Quý Anh/Chị xử lý phê duyệt tài liệu trong vòng 1 ngày làm việc sau khi nhận được mail này.
+
+    Các vướng mắc liên hệ:
+        - Tên: %{name}
+        - Số điện thoại: %{sdt}
+        - Email: %{email}
+
+    Chúc Quý Anh/Chị một ngày làm việc hiệu quả.
+    -----------------------------------------------------------------------------------------------------------------------------------------
+    BIDV - Chia sẻ cơ hội, Hợp tác thành công!
+accountId: #
+  - 6216586cba649b006aacd775 # manh
+  -
