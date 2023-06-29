@@ -1,7 +1,7 @@
 require "faraday"
 
 class CollectDataService
-  attr_accessor :host, :basic_auth
+  attr_accessor :host, :basic_auth, :accout_ids_list
 
   def initialize
     @host = ENV["CONFLUENCE_HOST"]
@@ -9,6 +9,7 @@ class CollectDataService
       username: ENV["CONFLUENCE_USER_NAME"],
       password: ENV["CONFLUENCE_API_KEY"]
     }
+    @accout_ids_list = ActiveSupport::JSON.decode(ENV["ACCOUNT_ID_LIST"]) rescue []
   end
 
   def perform
@@ -33,7 +34,9 @@ class CollectDataService
     page_informations = get_pages_approving.reject {|t| t["data-linked-resource-id"].blank? }
     page_informations.each do |page|
       page_id = page["data-linked-resource-id"]
-      next unless page_id && get_state(page_id).downcase == "confirmed"
+      page_status = get_state(page_id).downcase rescue ""
+      page["status"] = page_status
+      next unless page_status == "confirmed"
 
       page["approval_users"] = []
       path = Settings.confluence.path.get_comments % {page_id: page_id}
@@ -57,12 +60,22 @@ class CollectDataService
   end
 
   def extract_datas
-    get_page_comments
+    hash = {}
+    keys = accout_ids_list.keys
+    get_page_comments.each do |data|
+      next unless data["status"] == "confirmed"
+      ids = keys - data["approval_users"]
+      ids.each do |id|
+        hash[id] = hash[id] ? hash[id] : {"email": accout_ids_list[id], href: []}
+        hash[id][:href] << host + data["href"].gsub("_", "+")
+      end
+    end
+    hash
   end
 
   def send_notification
     extract_datas.each do ||
-
+      
     end
   end
 
