@@ -1,0 +1,2 @@
+regex:
+  email: /\A\S+@.+\.\S+\z/

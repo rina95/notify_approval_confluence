@@ -1,0 +1,40 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "3004:3000"
+    command: >
+      bash -c "rm -rf tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/usr/src/notify_confluence/
+    env_file: 
+      - ".env"
+    tty: true
+    stdin_open: true
+    depends_on:
+      - db
+      - redis
+  db:
+    image: postgres:10.3-alpine
+    ports:
+      - "5433:5432"
+  redis:
+    image: redis:4.0-alpine
+    command: redis-server
+    ports:
+      - "6380:6379"
+    env_file: 
+      - ".env"
+  cable:
+    depends_on:
+      - redis
+    build: .
+    command: bundle exec puma -p 28080 cable/config.ru
+    ports:
+      - '28082:28080'
+    volumes:
+      - .:/usr/src/notify_confluence/
+volumes:
+  redis:
+  postgres:
