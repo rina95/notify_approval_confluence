@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p>Kính gửi anh/chị,</p>
+    <p> 
+      Hiện tại có các tài liệu PTTK sau đang chờ anh/chị phê duyệt trên Confluence:
+      <br>
+    </p>
+    <ul>
+      <% @link_page_list.each do |link| %>
+        <li><a href='<%= link %>'><%= link %></a></li>
+      <% end %>
+    </ul>
+    <p>
+      Đề nghị Quý Anh/Chị xử lý phê duyệt tài liệu trong vòng 1 ngày làm việc sau khi nhận được mail này.
+      <br>
+      Các vướng mắc liên hệ:
+      <br>
+    </p>
+    <ul>
+      <li> Tên: <%= @contact_name %> </li>
+      <li> Số điện thoại: <%= @contact_phone %> </li>
+      <li> Email: <%= @contact_email %> </li>
+    </ul>
+    <p>
+      Chúc Quý Anh/Chị một ngày làm việc hiệu quả.
+      <br>
+      -----------------------------------------------------------------------------------------------------------------------------------------
+      <br>
+      BIDV - Chia sẻ cơ hội, Hợp tác thành công!</p>
+      <br>
+  </body>
+</html>

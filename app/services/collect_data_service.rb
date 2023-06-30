@@ -1,3 +1,4 @@
+# encoding: utf-8
 require "faraday"
 
 class CollectDataService
@@ -45,6 +46,7 @@ class CollectDataService
       comments.each do |comment|
         content = comment.dig("body", "view", "value")
         created_by = comment.dig("history", "createdBy", "accountId")
+        # binding.pry if created_by == "62f4ba4bb5b801a9aff191c8"
         next unless content.downcase.include?("thống nhất")
         page["approval_users"] << created_by
       end
@@ -66,7 +68,8 @@ class CollectDataService
       next unless data["status"] == "confirmed"
       ids = keys - data["approval_users"]
       ids.each do |id|
-        hash[id] = hash[id] ? hash[id] : {"email": accout_ids_list[id], href: []}
+        # hash[id] = hash[id] ? hash[id] : {"email": accout_ids_list[id], href: []}
+        hash[id] = hash[id] ? hash[id] : {"email": "phanbt95@gmail.com", href: []}
         hash[id][:href] << host + data["href"].gsub("_", "+")
       end
     end
@@ -74,8 +77,11 @@ class CollectDataService
   end
 
   def send_notification
-    extract_datas.each do ||
-      
+    pp extract_datas
+    extract_datas.each do |accountID, data|
+      email = data[:email]
+      links = data[:href]
+      NotifyApproveMailer.notify(email, links).deliver_now
     end
   end
 
