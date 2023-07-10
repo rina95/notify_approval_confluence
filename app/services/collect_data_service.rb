@@ -47,7 +47,7 @@ class CollectDataService
         content = comment.dig("body", "view", "value")
         created_by = comment.dig("history", "createdBy", "accountId")
         # binding.pry if created_by == "62f4ba4bb5b801a9aff191c8"
-        next unless content.downcase.include?("thống nhất")
+        next unless content.downcase.include?("thống nhất") || content.downcase.include?("thống nhất")
         page["approval_users"] << created_by
       end
       page["approval_users"].uniq!
@@ -68,8 +68,8 @@ class CollectDataService
       next unless data["status"] == "confirmed"
       ids = keys - data["approval_users"]
       ids.each do |id|
-        # hash[id] = hash[id] ? hash[id] : {"email": accout_ids_list[id], href: []}
-        hash[id] = hash[id] ? hash[id] : {"email": "phanbt95@gmail.com", href: []}
+        hash[id] = hash[id] ? hash[id] : {"email": accout_ids_list[id], href: []}
+        # hash[id] = hash[id] ? hash[id] : {"email": "phanbt95@gmail.com", href: []}
         hash[id][:href] << host + data["href"].gsub("_", "+")
       end
     end
