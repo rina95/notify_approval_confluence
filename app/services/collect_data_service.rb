@@ -1,5 +1,6 @@
 # encoding: utf-8
 require "faraday"
+require "csv"
 
 class CollectDataService
   attr_accessor :host, :basic_auth, :accout_ids_list
@@ -74,6 +75,17 @@ class CollectDataService
       end
     end
     hash
+  end
+
+  def export_csv
+    path = Rails.root.join('tmp', 'remain_approval.csv')
+    headers = ["HD PTTK", "Document wait to Approve"]
+    CSV.open(path, "wb") do |csv|
+      csv << headers
+      extract_datas.each do |key, data|
+        csv << [data[:email], data[:href].join("\n")]
+      end
+    end
   end
 
   def send_notification
